@@ -3,6 +3,7 @@ import os
 import sys
 import asyncio
 import aiofiles
+from uuid import uuid1
 from datetime import datetime
 from bases import RestfulHandler
 from parts import argument2str, generator_process
@@ -29,7 +30,7 @@ class DeployHandler(RestfulHandler):
         path = PurePath.joinpath(EGG_DIR, name)
         if not os.path.exists(path):  # 如果目录不存在则创建
             os.makedirs(path)
-        file = PurePath.joinpath(path, version + FILE_TYPE)
+        file = PurePath.joinpath(path, version + FILE_TYPE[0])
         async with aiofiles.open(file, 'wb') as f:  # 保存EGG文件
             await f.write(egg.get('body'))
         await self.over(201, {'message': 'successful', 'project': name, version: version})
@@ -54,6 +55,13 @@ class RunnerHandler(RestfulHandler):
         #                                                 stdout=asyncio.subprocess.PIPE)
         # pid = process.pid
 
+        # 将日志写入文件
+        path = PurePath.joinpath(LOG_DIR, project)
+        if not os.path.exists(path):  # 如果目录不存在则创建
+            os.makedirs(path)
+        file = PurePath.joinpath(path, str(uuid1()) + FILE_TYPE[1])
+        async with aiofiles.open(file, 'w') as f:  # 保存EGG文件
+            await f.write(out)
         print(pid, out)
         print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 

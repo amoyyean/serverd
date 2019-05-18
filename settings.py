@@ -3,5 +3,6 @@ from pathlib import PurePath
 
 
 EGG_DIR = PurePath.joinpath(Path.cwd(), 'eggs')
-FILE_TYPE = '.egg'
+LOG_DIR = PurePath.joinpath(Path.cwd(), 'logs')
+FILE_TYPE = ['.egg', '.txt']
 EXECUTOR = 'executors'
