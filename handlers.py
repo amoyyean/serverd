@@ -3,6 +3,8 @@ import os
 import sys
 import asyncio
 import aiofiles
+import socket
+from tornado.websocket import WebSocketHandler
 from uuid import uuid1
 from datetime import datetime
 from bases import RestfulHandler
@@ -80,4 +82,39 @@ class SchedulerHandler(RestfulHandler):
 
     async def delete(self):
         pass
+
+
+class RegisterHandler(WebSocketHandler):
+    """多机注册
+    允许其他服务器注册到主服务器"""
+
+    def open(self):
+        # 连接建立时验证身份并保存节点信息
+        ssk = self.request.headers.get('Server-Secret-Key')
+        port = self.request.headers.get('PORT')
+        connected = socket.gethostname()
+        host = socket.gethostbyname(connected) + ':' + port
+        if ssk == SECRET_KEY:
+            message = 'server master and server lite connected.'
+            self.write_message(message)
+            SERVERS[host] = self
+        else:
+            message = 'Server-Secret-Key 不匹配，断开连接。'
+            self.write_message(message)
+            self.close()
+        print(SERVERS)
+
+    def on_message(self, message):
+        # 收到信息时调用
+        self.write_message("Client Message: " + message)
+
+    def on_close(self):
+        print("WebSocket closed")
+
+
+def send_to_server(client, message):
+    # 向指定的客户端推送消息
+    client.write_message(message)
+
+
 
