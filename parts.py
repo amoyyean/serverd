@@ -1,3 +1,6 @@
+"""实现与子进程通信的进程协议
+并且定义了一些功能性方法
+"""
 import sys
 import asyncio
 from datetime import datetime
@@ -24,7 +27,7 @@ def argument2str(arguments):
 
 
 class AsyncSubprocessProtocol(asyncio.SubprocessProtocol):
-    """ 基于SubprocessProtocol协议实现与子进程通信的进程协议 """
+    """ 基于SubprocessProtocol实现与子进程通信的进程协议 """
     def __init__(self, exit_future):
         self.exit_future = exit_future
         self.output = bytearray()

@@ -1,3 +1,4 @@
+"""配置文件"""
 from pathlib import Path
 from pathlib import PurePath
 

@@ -1,4 +1,4 @@
-import socket
+"""在Tornado RequestHandler基础上增加了一些友好的方法"""
 from tornado.web import RequestHandler
 
 

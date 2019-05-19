@@ -1,3 +1,9 @@
+"""
+项目部署接口
+即时调度接口
+定时任务接口
+多机通信接口
+"""
 import time
 import os
 import sys
@@ -15,8 +21,8 @@ from settings import *
 class IndexHandler(RestfulHandler):
     def get(self):
         arguments = argument2str(self.request.arguments)
-        value = arguments.get('abs')
-        self.write(value)
+
+        self.write('Welcome')
 
 
 class DeployHandler(RestfulHandler):

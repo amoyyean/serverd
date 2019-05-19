@@ -1,3 +1,4 @@
+"""路由配置"""
 from tornado.web import URLSpec
 
 from handlers import IndexHandler, DeployHandler, RunnerHandler, RegisterHandler
