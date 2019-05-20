@@ -101,9 +101,8 @@ class RegHandler(RestfulHandler):
             port = arguments.get('port')
             host = self.request.remote_ip + ":" + str(port)
             SERVERS.add(host)
-            await self.over(200, {'message': 'Register successful'})
+            await self.over(200, {'message': 'Register successful', 'host': host, 'servers': SERVERS})
         else:
             await self.interrupt(400, 'Secret Key error')
-        print('SERVERS:%s' % SERVERS)
 
 
