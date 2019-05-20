@@ -90,37 +90,20 @@ class SchedulerHandler(RestfulHandler):
         pass
 
 
-class RegisterHandler(WebSocketHandler):
+class RegHandler(RestfulHandler):
     """多机注册
-    允许其他服务器注册到主服务器"""
-
-    def open(self):
-        # 连接建立时验证身份并保存节点信息
-        ssk = self.request.headers.get('Server-Secret-Key')
-        port = self.request.headers.get('PORT')
-        connected = socket.gethostname()
-        host = socket.gethostbyname(connected) + ':' + port
-        if ssk == SECRET_KEY:
-            message = 'server master and server lite connected.'
-            self.write_message(message)
-            SERVERS[host] = self
+    校验副机身份并存储密钥匹配的副机信息"""
+    async def get(self):
+        arguments = argument2str(self.request.arguments)
+        secret = arguments.get('secret')
+        if secret == SECRET_KEY:
+            port = arguments.get('port')
+            host_name = socket.gethostname()
+            host = socket.gethostbyname(host_name) + str(port)
+            SERVERS[host] = host_name
+            await self.over(200, {'message': 'Register successful'})
         else:
-            message = 'Server-Secret-Key 不匹配，断开连接。'
-            self.write_message(message)
-            self.close()
-        print(SERVERS)
-
-    def on_message(self, message):
-        # 收到信息时调用
-        self.write_message("Client Message: " + message)
-
-    def on_close(self):
-        print("WebSocket closed")
-
-
-def send_to_server(client, message):
-    # 向指定的客户端推送消息
-    client.write_message(message)
-
+            await self.interrupt(400, 'Secret Key error')
+        print('SERVERS:%s' % SERVERS)
 
 
