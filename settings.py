@@ -8,5 +8,5 @@ LOG_DIR = PurePath.joinpath(Path.cwd(), 'logs')
 FILE_TYPE = ['.egg', '.txt']
 EXECUTOR = 'executors'
 SECRET_KEY = '689PL$BNVATM'
-SERVERS = {}
+SERVERS = set()
 

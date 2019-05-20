@@ -99,9 +99,8 @@ class RegHandler(RestfulHandler):
         secret = arguments.get('secret')
         if secret == SECRET_KEY:
             port = arguments.get('port')
-            host_name = socket.gethostname()
             host = self.request.remote_ip + ":" + str(port)
-            SERVERS[host] = host_name
+            SERVERS.add(host)
             await self.over(200, {'message': 'Register successful'})
         else:
             await self.interrupt(400, 'Secret Key error')
