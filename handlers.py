@@ -9,8 +9,7 @@ import os
 import sys
 import asyncio
 import aiofiles
-import socket
-from tornado.websocket import WebSocketHandler
+import json
 from uuid import uuid1
 from datetime import datetime
 from bases import RestfulHandler
@@ -101,7 +100,7 @@ class RegHandler(RestfulHandler):
             port = arguments.get('port')
             host = self.request.remote_ip + ":" + str(port)
             SERVERS.add(host)
-            await self.over(200, {'message': 'Register successful', 'host': host, 'servers': SERVERS})
+            await self.over(200, {'message': 'Register successful', 'host': host, 'servers': json.dumps(SERVERS)})
         else:
             await self.interrupt(400, 'Secret Key error')
 
