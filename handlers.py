@@ -95,11 +95,12 @@ class RegHandler(RestfulHandler):
     校验副机身份并存储密钥匹配的副机信息"""
     async def get(self):
         arguments = argument2str(self.request.arguments)
+
         secret = arguments.get('secret')
         if secret == SECRET_KEY:
             port = arguments.get('port')
             host_name = socket.gethostname()
-            host = socket.gethostbyname(host_name) + str(port)
+            host = self.request.remote_ip + ":" + str(port)
             SERVERS[host] = host_name
             await self.over(200, {'message': 'Register successful'})
         else:
